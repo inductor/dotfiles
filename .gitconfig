@@ -1,0 +1,47 @@
+[user]
+    name = inductor
+    email = kela@inductor.me
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    grep = auto
+[push]
+    default = tracking
+[core]
+    excludesfile = ~/.gitignore_global
+    autoCRLF = false
+    editor = code --wait
+    quotepath = false
+	whitespace = cr-at-eol
+[diff]
+    compactionHeuristic = true
+[branch]
+    autosetuprebase = always
+[pull]
+    rebase = true
+[tig "bind"]
+    generic = g move-first-line
+    generic = G move-last-line
+    generic = <Ctrl-F> move-page-down
+    generic = <Ctrl-B> move-page-up
+[interactive]
+    diffFilter = diff-highlight
+[pager]
+    log = diff-highlight | LESS=-R less
+    show = diff-highlight | LESS=-R less
+    diff = diff-highlight | LESS=-R less
+[ghq]
+    root = ~/src
+[fetch]
+    prune = true
+# [filter "lfs"]
+#     process = git-lfs filter-process
+#     required = true
+# [filter "lfs"]
+#         required = true
+#     clean = git-lfs clean -- %f
+#     smudge = git-lfs smudge -- %f
+[include]
+	path = ~/.gitconfig_shared
