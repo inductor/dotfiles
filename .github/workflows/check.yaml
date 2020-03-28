@@ -33,18 +33,6 @@ jobs:
       - name: Install dotfiles
         run: .bin/install.sh install
 
-  arch:
-    runs-on: ubuntu-latest
-    container: archlinux/base:latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Update packages
-        run: pacman -Syu --noconfirm
-      - name: Install required packages
-        run: pacman -S --noconfirm git sudo
-      - name: Install dotfiles
-        run: .bin/install.sh install
-
   lint:
     runs-on: ubuntu-latest
     container: ubuntu:latest
