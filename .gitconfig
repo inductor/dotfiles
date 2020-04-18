@@ -1,6 +1,6 @@
 [user]
     name = inductor
-    email = kela@inductor.me
+    email = kohei.ota@hpe.com
 [color]
     diff = auto
     status = auto
@@ -45,3 +45,5 @@
 #     smudge = git-lfs smudge -- %f
 [include]
 	path = ~/.gitconfig_shared
+[format]
+	signoff = true
