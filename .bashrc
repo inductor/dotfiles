@@ -1,3 +1,4 @@
+eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 eval "$(starship init bash)"
 eval "$(direnv hook bash)"
 alias git=hub
@@ -21,7 +22,7 @@ alias kx='kubectx'
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin:$HOME/Library/Python/3.7/bin:/usr/local/share/git-core/contrib/diff-highlight
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export PATH="$HOME/.nodenv/bin:$PATH"
+eval "$(anyenv init -)"
 eval "$(nodenv init -)"
 function ghql() {
   local selected_file=$(ghq list --full-path | fzf --query "$LBUFFER")
@@ -50,7 +51,7 @@ export LESS_TERMCAP_us=$'\E[01;32m'      # Begins underline.
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
-pokemon umbreon
+# pokemon umbreon
 export XDG_CONFIG_HOME="$HOME/.config"
 export LANG="ja_JP.UTF-8"
 source <(doctl completion bash)
