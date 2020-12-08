@@ -1,2 +1,4 @@
 .config/gcloud
 .ssh/known_hosts
+.config/anyenv/
+.config/doctl/
