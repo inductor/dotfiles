@@ -7,6 +7,7 @@ if [ -f /etc/lsb-release ]; then
     sudo ln -s /usr/share/doc/git/contrib/diff-highlight/diff-highlight /usr/local/bin/diff-highlight
 fi
 brew tap instrumenta/instrumenta
-brew install make anyenv bash bash-completion cfssl conftest direnv goodwithtech/r/dockle doctl eksctl fzf gh ghq git helm hub hugo kind kubectx kustomize minikube mkcert neovim shellcheck starship datawire/blackbird/telepresence tfenv tflint tig aquasecurity/trivy/trivy wget k9s
+brew tap  weaveworks/tap
+brew install make anyenv bash bash-completion cfssl conftest direnv goodwithtech/r/dockle doctl weaveworks/tap/eksctl fzf gh ghq git helm hub hugo kind kubectx kustomize minikube mkcert neovim shellcheck starship datawire/blackbird/telepresence tfenv tflint tig aquasecurity/trivy/trivy wget k9s
 
 anyenv install --init
