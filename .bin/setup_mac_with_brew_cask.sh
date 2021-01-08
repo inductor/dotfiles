@@ -5,7 +5,7 @@ if [ -f /etc/lsb-release ]; then
     sudo apt-get update && sudo apt-get install -y --no-install-recommends locales-all build-essential manpages-dev glibc-doc linux-doc git jq gdb debconf-utils fakeroot devscripts
     sudo chmod +x /usr/share/doc/git/contrib/diff-highlight/diff-highlight
     sudo ln -s /usr/share/doc/git/contrib/diff-highlight/diff-highlight /usr/local/bin/diff-highlight
-    apt purge -y --autoremove apport apport-symptoms fwupd nano netplan.io popularity-contest unattended-upgrades update-manager-core
+    sudo apt purge -y --autoremove apport apport-symptoms fwupd nano netplan.io popularity-contest unattended-upgrades update-manager-core
 fi
 brew tap instrumenta/instrumenta
 brew tap  weaveworks/tap
