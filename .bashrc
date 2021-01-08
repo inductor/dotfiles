@@ -19,7 +19,8 @@ alias push='git push origin $(git_branch)'
 alias kg='kubectl get'
 alias kd='kubectl describe'
 alias kx='kubectx'
-export GOPATH=$HOME/go
+export GOROOT=/usr/local/bin
+export GOPATH=$HOME/ghq
 export PATH=$PATH:$GOPATH/bin:$HOME/Library/Python/3.7/bin:/usr/local/share/git-core/contrib/diff-highlight
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 eval "$(anyenv init -)"
