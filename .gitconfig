@@ -33,7 +33,7 @@
     show = diff-highlight | LESS=-R less
     diff = diff-highlight | LESS=-R less
 [ghq]
-    root = ~/ghq
+    root = ~/ghq/src
 [fetch]
     prune = true
 # [filter "lfs"]
