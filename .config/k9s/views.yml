@@ -1,0 +1,35 @@
+k9s:
+  views:
+    v1/pods:
+      columns:
+        - NAMESPACE
+        - NAME
+        - READY
+        - RESTARTS
+        - STATUS
+        - "%CPU/R"
+        - "%CPU/L"
+        - "%MEM/R"
+        - "%MEM/L"
+        - NODE
+        - AGE
+    v1/services:
+      columns:
+        - NAMESPACE
+        - NAME
+        - TYPE
+        - PORTS
+        - AGE
+    v1/nodes:
+      columns:
+        - NAME
+        - STATUS
+        - VERSION
+        - PODS
+        - CPU
+        - MEM
+        - "%CPU"
+        - "%MEM"
+        - "CPU/A"
+        - "MEM/A"
+        - AGE
