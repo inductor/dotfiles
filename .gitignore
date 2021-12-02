@@ -2,3 +2,4 @@
 .ssh/known_hosts
 .config/anyenv/
 .config/doctl/
+.config/k9s/config.yml

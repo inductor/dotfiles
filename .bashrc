@@ -19,9 +19,7 @@ alias push='git push origin $(git_branch)'
 alias kg='kubectl get'
 alias kd='kubectl describe'
 alias kx='kubectx'
-export GOROOT=/usr/local/bin
-export GOPATH=$HOME/ghq
-export PATH=$PATH:$GOPATH/bin:$HOME/Library/Python/3.7/bin:/usr/local/share/git-core/contrib/diff-highlight
+export PATH=$PATH:$HOME/Library/Python/3.7/bin:/usr/local/share/git-core/contrib/diff-highlight
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 eval "$(anyenv init -)"
 eval "$(nodenv init -)"
@@ -56,3 +54,8 @@ fi
 export XDG_CONFIG_HOME="$HOME/.config"
 export LANG="ja_JP.UTF-8"
 source <(doctl completion bash)
+
+export DIGITALOCEAN_TOKEN=e2dd9250fd1e38d82a09e50d755c7102d3a4fd64a4c03428afcdbe8d00eaa4b4
+export SPACES_ACCESS_KEY_ID=UU53MWH6Z3VXOLWWETFW
+export SPACES_SECRET_ACCESS_KEY=mmfEnMaRwVHz1HgXMeIpJyh1LCI383bsQKvsrUfkCE0
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
