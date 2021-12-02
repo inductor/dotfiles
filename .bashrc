@@ -55,7 +55,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export LANG="ja_JP.UTF-8"
 source <(doctl completion bash)
 
-export DIGITALOCEAN_TOKEN=e2dd9250fd1e38d82a09e50d755c7102d3a4fd64a4c03428afcdbe8d00eaa4b4
-export SPACES_ACCESS_KEY_ID=UU53MWH6Z3VXOLWWETFW
-export SPACES_SECRET_ACCESS_KEY=mmfEnMaRwVHz1HgXMeIpJyh1LCI383bsQKvsrUfkCE0
+export DIGITALOCEAN_TOKEN=your_token
+export SPACES_ACCESS_KEY_ID=your_id
+export SPACES_SECRET_ACCESS_KEY=your_key
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
