@@ -19,8 +19,7 @@ alias push='git push origin $(git_branch)'
 alias kg='kubectl get'
 alias kd='kubectl describe'
 alias kx='kubectx'
-export PATH=$PATH:$HOME/Library/Python/3.7/bin:/usr/local/share/git-core/contrib/diff-highlight:/usr/local/go/bin
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight:$HOME/go/bin:/usr/local/go/bin:${KREW_ROOT:-$HOME/.krew}/bin"
 eval "$(anyenv init -)"
 eval "$(nodenv init -)"
 function ghql() {
@@ -52,7 +51,9 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
 fi
 # pokemon umbreon
 export XDG_CONFIG_HOME="$HOME/.config"
-source <(doctl completion bash)
+. <(doctl completion bash)
+. <(kubectl completion bash)
+. <(eksctl completion bash)
 
 export DIGITALOCEAN_TOKEN=your_token
 export SPACES_ACCESS_KEY_ID=your_id

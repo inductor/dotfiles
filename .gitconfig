@@ -1,6 +1,6 @@
 [user]
     name = inductor
-    email = kohei.ota@hpe.com
+    email = kela@inductor.me
 [color]
     diff = auto
     status = auto
@@ -35,7 +35,7 @@
     show = diff-highlight | LESS=-R less
     diff = diff-highlight | LESS=-R less
 [ghq]
-    root = ~/ghq/src
+    root = ~/go/src
 [fetch]
     prune = true
 # [filter "lfs"]
