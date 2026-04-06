@@ -1,0 +1,32 @@
+#!/bin/sh
+{{ if eq .chezmoi.os "darwin" }}
+# Install Homebrew packages
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile" || true
+
+# Touch ID for sudo (macOS Sonoma+)
+sudo tee /etc/pam.d/sudo_local > /dev/null << 'EOF'
+auth       optional       /opt/homebrew/lib/pam/pam_reattach.so
+auth       sufficient     pam_tid.so
+EOF
+brew install pam-reattach
+
+# gh auth: github.com
+if ! gh auth status --hostname github.com &>/dev/null; then
+  gh auth login --hostname github.com --web
+fi
+
+# Rust toolchain
+if ! command -v rustc &>/dev/null; then
+  rustup-init -y --no-modify-path
+fi
+
+# Claude Code
+if ! command -v claude &>/dev/null; then
+  curl -fsSL https://claude.ai/install.sh | sh
+fi
+
+# Xcode
+if ! xcodes installed 2>/dev/null | grep -q '^26'; then
+  xcodes install "26"
+fi
+{{ end }}

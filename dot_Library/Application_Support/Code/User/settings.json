@@ -1,0 +1,8 @@
+{
+    "telemetry.telemetryLevel": "off",
+    "telemetry.feedback.enabled": false,
+    "workbench.startupEditor": "none",
+    "makefile.configureOnOpen": true,
+    "go.toolsManagement.autoUpdate": true,
+    "update.showReleaseNotes": false
+}

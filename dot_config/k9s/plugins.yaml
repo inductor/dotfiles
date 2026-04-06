@@ -1,0 +1,365 @@
+plugins:
+  # argo-workflows: view/watch/terminate/submit (requires: argo CLI)
+  view-workflow:
+    shortCut: v
+    confirm: false
+    description: view
+    scopes:
+      - workflows
+    command: sh
+    background: false
+    args:
+      - -c
+      - |
+        argo -n $NAMESPACE get $NAME
+        echo -n "\nPress enter to return to k9s..." && read _
+  watch-workflow:
+    shortCut: Shift-W
+    confirm: false
+    description: watch
+    scopes:
+      - workflows
+    command: sh
+    background: false
+    args:
+      - -c
+      - "watch -n 3 -q 5 argo -n $NAMESPACE get $NAME"
+  terminate-workflow:
+    shortCut: t
+    confirm: true
+    description: terminate
+    scopes:
+      - workflows
+    command: argo
+    background: false
+    args:
+      - -n
+      - $NAMESPACE
+      - terminate
+      - $NAME
+  submit-from:
+    shortCut: s
+    confirm: true
+    description: submit-as-workflow
+    scopes:
+      - workflowtemplates
+      - cronworkflows
+    command: argo
+    background: false
+    args:
+      - -n
+      - $NAMESPACE
+      - submit
+      - --from
+      - $RESOURCE_NAME/$NAME
+
+  # argocd: sync/refresh/auto-sync toggle (requires: argocd CLI)
+  argocd-sync:
+    shortCut: "s"
+    description: Sync ArgoCD Application
+    scopes:
+      - application
+    command: argocd
+    args:
+      - app
+      - sync
+      - $NAME
+      - --app-namespace
+      - $NAMESPACE
+    background: true
+    confirm: true
+  refresh-apps:
+    shortCut: Shift-R
+    confirm: false
+    scopes:
+      - apps
+    description: Refresh ArgoCD app (hard)
+    command: bash
+    background: false
+    args:
+      - -c
+      - "kubectl annotate applications -n argocd $NAME argocd.argoproj.io/refresh=hard"
+  disable-auto-sync:
+    shortCut: Shift-J
+    confirm: false
+    scopes:
+      - apps
+    description: Disable ArgoCD auto-sync
+    command: kubectl
+    background: false
+    args:
+      - patch
+      - applications
+      - -n
+      - argocd
+      - $NAME
+      - "--type=json"
+      - '-p=[{"op":"replace", "path": "/spec/syncPolicy", "value": {}}]'
+  enable-auto-sync:
+    shortCut: Shift-B
+    confirm: false
+    scopes:
+      - apps
+    description: Enable ArgoCD auto-sync
+    command: kubectl
+    background: false
+    args:
+      - patch
+      - applications
+      - -n
+      - argocd
+      - $NAME
+      - --type=merge
+      - '-p={"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["ApplyOutOfSyncOnly=true","CreateNamespace=true","PruneLast=true","PrunePropagationPolicy=foreground"]}}}'
+
+  # watch-events: watch events for any resource (Shift-E)
+  watch-events:
+    shortCut: Shift-E
+    confirm: false
+    description: Get Events
+    scopes:
+      - all
+    command: sh
+    background: false
+    args:
+      - -c
+      - "kubectl events --context $CONTEXT --namespace $NAMESPACE --for $RESOURCE_NAME.${RESOURCE_GROUP:+.RESOURCE_GROUP}/$NAME --watch"
+
+  # debug-container: ephemeral debug container with nicolaka/netshoot (Shift-D on containers)
+  debug:
+    shortCut: Shift-D
+    description: Add debug container
+    dangerous: true
+    scopes:
+      - containers
+    command: bash
+    background: false
+    confirm: true
+    inputs:
+      - name: image
+        label: Debug image
+        type: dropdown
+        required: true
+        default: nicolaka/netshoot:v0.15
+        options:
+          - nicolaka/netshoot:v0.15
+          - busybox:1.37
+          - alpine:3.23
+          - ubuntu:26.04
+      - name: profile
+        label: Debug profile
+        type: dropdown
+        required: true
+        default: sysadmin
+        options:
+          - general
+          - baseline
+          - restricted
+          - netadmin
+          - sysadmin
+          - legacy
+      - name: share_processes
+        label: Share processes
+        type: bool
+        required: true
+        default: true
+    args:
+      - -c
+      - >-
+        kubectl debug -it --context $CONTEXT -n=$NAMESPACE $POD
+        --target=$NAME
+        --image=$INPUT_IMAGE
+        --profile=$INPUT_PROFILE
+        $([ "$INPUT_SHARE_PROCESSES" = "true" ] && echo "--share-processes")
+        -- sh
+
+  # job-suspend: toggle CronJob suspend/resume (Ctrl-S on cronjobs)
+  toggleCronjob:
+    shortCut: Ctrl-S
+    confirm: true
+    dangerous: true
+    scopes:
+      - cj
+    description: Toggle suspend/resume CronJob
+    command: kubectl
+    background: true
+    args:
+      - patch
+      - cronjobs
+      - $NAME
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+      - -p
+      - '{"spec" : {"suspend" : $!COL-SUSPEND }}'
+
+  # remove-finalizers: remove all finalizers from stuck resources (Ctrl-F)
+  remove_finalizers:
+    shortCut: Ctrl-F
+    confirm: true
+    dangerous: true
+    scopes:
+      - all
+    description: Remove all finalizers (dangerous)
+    command: kubectl
+    background: true
+    args:
+      - patch
+      - --context
+      - $CONTEXT
+      - --namespace
+      - $NAMESPACE
+      - $RESOURCE_NAME.$RESOURCE_GROUP
+      - $NAME
+      - -p
+      - '{"metadata":{"finalizers":null}}'
+      - --type
+      - merge
+
+  # crd-wizard: CRD explorer TUI (Shift-W on crds, requires: crd-wizard)
+  crd-wizard:
+    shortCut: Shift-W
+    description: CRD Wizard
+    dangerous: false
+    scopes:
+      - crds
+    command: bash
+    background: false
+    confirm: false
+    args:
+      - -c
+      - "crd-wizard tui --context $CONTEXT --kind $COL-KIND"
+
+  # get-all: list all resources in namespace (g, requires: krew ketall)
+  get-all-namespace:
+    shortCut: g
+    confirm: false
+    description: get-all
+    scopes:
+      - namespaces
+    command: sh
+    background: false
+    args:
+      - -c
+      - "kubectl get-all --context $CONTEXT -n $NAME | less -K"
+  get-all-other:
+    shortCut: g
+    confirm: false
+    description: get-all
+    scopes:
+      - all
+    command: sh
+    background: false
+    args:
+      - -c
+      - "kubectl get-all --context $CONTEXT -n $NAMESPACE | less -K"
+
+  # log-jq: JSON logs via jq (Ctrl-J on pods, requires: kubectl-jq krew plugin)
+  jqlogs:
+    shortCut: Ctrl-J
+    confirm: false
+    description: "Logs (jq)"
+    scopes:
+      - po
+    command: kubectl
+    background: false
+    args:
+      - jq
+      - $NAME
+      - $NAMESPACE
+      - $CONTEXT
+
+  # log-stern: multi-pod logs via stern (Ctrl-Y on pods, requires: stern)
+  stern:
+    shortCut: Ctrl-Y
+    confirm: false
+    description: "Logs <Stern>"
+    scopes:
+      - pods
+    command: stern
+    background: false
+    args:
+      - --tail
+      - 50
+      - $FILTER
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+
+  # trace-dns: trace DNS requests via inspektor-gadget (Shift-D on containers/pods/nodes)
+  trace-dns:
+    shortCut: Shift-D
+    description: Trace DNS requests
+    scopes:
+      - containers
+      - pods
+      - nodes
+    command: bash
+    confirm: false
+    background: false
+    args:
+      - -c
+      - |
+        IG_VERSION=v0.34.0
+        IG_IMAGE=ghcr.io/inspektor-gadget/ig:$IG_VERSION
+        IG_FIELD=k8s.podName,src,dst,qr,qtype,name,rcode,latency_ns
+        GREEN='\033[0;32m'; RED='\033[0;31m'; BLUE='\033[0;34m'; NC='\033[0m'
+        KUBECTL_VERSION=$(kubectl version --client | awk '/Client Version:/{print $3}')
+        if [[ "$(echo "$KUBECTL_VERSION" | cut -d. -f2)" -lt 30 ]]; then
+          echo -e "${RED}kubectl version 1.30 or later is required${NC}"; sleep 3; exit
+        fi
+        clear
+        if [[ -n "$POD" ]]; then
+          echo -e "${GREEN}Tracing DNS for container ${BLUE}${NAME}${GREEN} in pod ${BLUE}${POD}${NC}"
+          IG_NODE=$(kubectl get pod "$POD" -n "$NAMESPACE" -o jsonpath='{.spec.nodeName}')
+          kubectl debug --kubeconfig=$KUBECONFIG --context=$CONTEXT -q --profile=sysadmin "node/$IG_NODE" -it --image="$IG_IMAGE" -- ig run trace_dns:$IG_VERSION -F "k8s.podName==$POD" -F "k8s.containerName=$NAME" --fields "$IG_FIELD"
+        elif [[ -n "$NAMESPACE" ]]; then
+          echo -e "${GREEN}Tracing DNS for pod ${BLUE}${NAME}${GREEN} in namespace ${BLUE}${NAMESPACE}${NC}"
+          IG_NODE=$(kubectl get pod "$NAME" -n "$NAMESPACE" -o jsonpath='{.spec.nodeName}')
+          kubectl debug --kubeconfig=$KUBECONFIG --context=$CONTEXT -q --profile=sysadmin -it --image="$IG_IMAGE" "node/$IG_NODE" -- ig run trace_dns:$IG_VERSION -F "k8s.podName==$NAME" --fields "$IG_FIELD"
+        else
+          echo -e "${GREEN}Tracing DNS for node ${BLUE}${NAME}${NC}"
+          kubectl debug --kubeconfig=$KUBECONFIG --context=$CONTEXT -q --profile=sysadmin -it --image="$IG_IMAGE" "node/$NAME" -- ig run trace_dns:$IG_VERSION --fields "$IG_FIELD"
+        fi
+
+  # pvc-resize: resize PVC interactively (r on pvc)
+  resize-pvc:
+    shortCut: r
+    description: Resize PVC
+    scopes:
+      - pvc
+    command: kubectl
+    confirm: true
+    dangerous: true
+    args:
+      - patch
+      - pvc
+      - $NAME
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+      - -p
+      - '{"spec":{"resources":{"requests":{"storage":"$INPUT_SIZE"}}}}'
+    inputs:
+      - name: size
+        label: New size (e.g. 10Gi)
+        type: string
+        required: true
+
+  # start-alpine: start alpine debug deployment (Ctrl-T on pods/deployments)
+  start-alpine-pod:
+    shortCut: Ctrl-T
+    confirm: true
+    description: "Start alpine:latest pod in current namespace"
+    scopes:
+      - pods
+      - deployments
+    command: bash
+    background: true
+    args:
+      - -c
+      - |
+        echo '{"apiVersion": "apps/v1", "kind": "Deployment", "metadata": {"name": "alpine", "labels": {"app": "alpine", "debug": "1"}}, "spec": {"selector": {"matchLabels": {"app": "alpine"}}, "replicas": 1, "template": {"metadata": {"labels": {"app": "alpine", "debug": "1"}}, "spec": {"containers": [{"name": "alpine", "image": "alpine:latest", "imagePullPolicy": "Always", "securityContext": {"runAsUser": 0, "runAsGroup": 0}, "stdin": true, "tty": true, "resources": {"requests": {"cpu": "100m", "memory": "100Mi"}, "limits": {"cpu": "100m", "memory": "100Mi"}}}]}}}}' | kubectl apply -f - --context $CONTEXT --namespace $NAMESPACE

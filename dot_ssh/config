@@ -1,0 +1,11 @@
+Host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/id_ed25519
+  TCPKeepAlive yes
+  IdentitiesOnly yes
+  User git
+
+Host *
+  ServerAliveInterval 200
+  ForwardX11 no
+  AddKeysToAgent yes

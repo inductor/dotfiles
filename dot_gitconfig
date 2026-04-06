@@ -1,0 +1,77 @@
+[ghq]
+    root = ~/go/src
+[user]
+    name = inductor
+    email = kela@inductor.me
+[credential "https://github.com"]
+    helper =
+    helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+    helper =
+    helper = !/opt/homebrew/bin/gh auth git-credential
+[core]
+    pager = delta
+    autocrlf = input
+    ignorecase = false
+    excludesfile = ~/.gitignore_global
+[init]
+    defaultBranch = main
+[pull]
+    rebase = true
+[push]
+    default = current
+    followTags = true
+    autoSetupRemote = true
+    useForceIfIncludes = true
+[fetch]
+    prune = true
+    pruneTags = true
+[rebase]
+    autoStash = true
+    updateRefs = true
+[rerere]
+    enabled = true
+[commit]
+    verbose = true
+[branch]
+    sort = -committerdate
+[tag]
+    sort = -version:refname
+[alias]
+    s = status -sb
+    l = log --oneline --graph -20
+    la = log --oneline --graph --all -30
+    d = diff
+    ds = diff --staged
+    co = checkout
+    sw = switch
+    br = branch
+    unstage = reset HEAD --
+    amend = commit --amend --no-edit
+    last = log -1 --stat
+    cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n1 git branch -d"
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    side-by-side = true
+    line-numbers = true
+[merge]
+    conflictstyle = zdiff3
+[diff]
+    algorithm = histogram
+    mnemonicPrefix = true
+    renames = copies
+    colorMoved = default
+[pack]
+    allowPackReuse = multi
+[remote "origin"]
+    followRemoteHEAD = always
+[help]
+    autocorrect = prompt
+[transfer]
+    fsckObjects = true
+[column]
+    ui = auto
+[include]
+    path = ~/.gitconfig_local

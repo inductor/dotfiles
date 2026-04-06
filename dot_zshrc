@@ -1,0 +1,49 @@
+[[ -d /opt/homebrew/share/zsh/site-functions ]] && fpath+=(/opt/homebrew/share/zsh/site-functions)
+export PATH=$(brew --prefix)/bin:$HOME/.local/bin:$PATH
+
+autoload -U compinit
+compinit
+
+alias k=kubectl
+alias kn=kubens
+alias kx=kubectx
+
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
+eval "$(rbenv init - zsh)"
+
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+export PATH="$PATH:$(go env GOPATH)/bin"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$PATH:${KREW_ROOT:-$HOME/.krew}/bin"
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+eval "$(starship init zsh)"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# ghq: fuzzy finder integration
+function ghq-fzf() {
+  local src=$(ghq list | fzf --preview "bat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
+  if [ -n "$src" ]; then
+    BUFFER="cd $(ghq root)/$src"
+    zle accept-line
+  fi
+  zle -R -c
+}
+zle -N ghq-fzf
+bindkey '^g' ghq-fzf
+
+# Google Cloud SDK (installed via brew cask)
+if [ -f "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]; then
+  source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+fi
+if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then
+  source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+fi
+
+[[ -f ~/.zshrc_local ]] && source ~/.zshrc_local
