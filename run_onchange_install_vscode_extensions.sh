@@ -5,6 +5,7 @@ github.vscode-github-actions
 golang.go
 hashicorp.hcl
 hashicorp.terraform
+jamiewoodio.cisco
 llvm-vs-code-extensions.lldb-dap
 manishsencha.readme-preview
 ms-azuretools.vscode-containers
@@ -19,9 +20,13 @@ ms-vscode.cpptools-extension-pack
 ms-vscode.cpptools-themes
 ms-vscode.makefile-tools
 ms-vscode.remote-explorer
+shopify.ruby-lsp
 swiftlang.swift-vscode
 tamasfe.even-better-toml
 vapor.vapor-vscode
+xdebug.php-debug
+xdebug.php-pack
+zobo.php-intellisense
 "
 
 for ext in $extensions; do

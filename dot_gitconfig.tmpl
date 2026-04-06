@@ -1,8 +1,8 @@
 [ghq]
     root = ~/go/src
 [user]
-    name = inductor
-    email = kela@inductor.me
+    name = {{ .git_name }}
+    email = {{ .git_email }}
 [credential "https://github.com"]
     helper =
     helper = !/opt/homebrew/bin/gh auth git-credential

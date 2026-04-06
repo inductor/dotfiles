@@ -1,1 +1,3 @@
-# No template data needed for public dotfiles
+[data]
+    git_name = "{{ promptStringOnce . "git_name" "Git user.name" }}"
+    git_email = "{{ promptStringOnce . "git_email" "Git user.email" }}"
