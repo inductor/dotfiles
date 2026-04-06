@@ -20,6 +20,18 @@ if ! command -v rustc &>/dev/null; then
   rustup-init -y --no-modify-path
 fi
 
+# Apple fonts (SF Pro, SF Mono)
+for font_dmg in SF-Pro SF-Mono; do
+  if ! ls /Library/Fonts/${font_dmg}*.otf &>/dev/null; then
+    dmg_path="/tmp/${font_dmg}.dmg"
+    curl -fsSL -o "$dmg_path" "https://devimages-cdn.apple.com/design/resources/download/${font_dmg}.dmg"
+    mount_point=$(hdiutil attach "$dmg_path" -nobrowse | tail -1 | awk '{print $3}')
+    sudo installer -pkg "${mount_point}"/*.pkg -target /
+    hdiutil detach "$mount_point"
+    rm -f "$dmg_path"
+  fi
+done
+
 # Claude Code
 if ! command -v claude &>/dev/null; then
   curl -fsSL https://claude.ai/install.sh | sh
