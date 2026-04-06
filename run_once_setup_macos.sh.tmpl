@@ -1,44 +1,59 @@
 #!/bin/sh
 {{ if eq .chezmoi.os "darwin" }}
-# Install Homebrew packages
+echo "==> Installing Homebrew packages..."
 brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile" || true
 
-# Touch ID for sudo (macOS Sonoma+)
+echo "==> Configuring Touch ID for sudo..."
 sudo tee /etc/pam.d/sudo_local > /dev/null << 'EOF'
 auth       optional       /opt/homebrew/lib/pam/pam_reattach.so
 auth       sufficient     pam_tid.so
 EOF
 brew install pam-reattach
 
-# gh auth: github.com
+echo "==> Checking GitHub CLI auth..."
 if ! gh auth status --hostname github.com &>/dev/null; then
   gh auth login --hostname github.com --web
 fi
 
-# Rust toolchain
+echo "==> Checking Rust toolchain..."
 if ! command -v rustc &>/dev/null; then
   rustup-init -y --no-modify-path
+else
+  echo "   Rust already installed, skipping"
 fi
 
-# Apple fonts (SF Pro, SF Mono)
+echo "==> Installing Apple fonts..."
 for font_dmg in SF-Pro SF-Mono; do
   if ! ls /Library/Fonts/${font_dmg}*.otf &>/dev/null; then
+    echo "   Downloading ${font_dmg}..."
     dmg_path="/tmp/${font_dmg}.dmg"
     curl -fsSL -o "$dmg_path" "https://devimages-cdn.apple.com/design/resources/download/${font_dmg}.dmg"
     mount_point=$(hdiutil attach "$dmg_path" -nobrowse | tail -1 | awk '{print $3}')
     sudo installer -pkg "${mount_point}"/*.pkg -target /
     hdiutil detach "$mount_point"
     rm -f "$dmg_path"
+  else
+    echo "   ${font_dmg} already installed, skipping"
   fi
 done
 
-# Claude Code
+echo "==> Checking Claude Code..."
 if ! command -v claude &>/dev/null; then
   curl -fsSL https://claude.ai/install.sh | sh
+else
+  echo "   Claude Code already installed, skipping"
 fi
 
-# Xcode
-if ! xcodes installed 2>/dev/null | grep -q '^26'; then
-  xcodes install "26"
+echo "==> Checking Xcode..."
+if command -v xcodes &>/dev/null; then
+  if ! xcodes installed 2>/dev/null | grep -q '^26'; then
+    xcodes install "26"
+  else
+    echo "   Xcode 26 already installed, skipping"
+  fi
+else
+  echo "   xcodes not found, skipping Xcode install"
 fi
+
+echo "==> macOS setup complete!"
 {{ end }}

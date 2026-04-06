@@ -1,6 +1,5 @@
 tap "facebook/fb"
 tap "hashicorp/tap"
-tap "homebrew/bundle"
 tap "xcodesorg/made"
 
 # CLI tools
@@ -65,6 +64,6 @@ cask "ghostty"
 cask "google-chrome"
 cask "headlamp"
 cask "slack"
-cask "tailscale"
+cask "tailscale-app"
 cask "visual-studio-code"
-cask "xcodes"
+cask "xcodes-app"

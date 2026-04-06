@@ -1,4 +1,10 @@
 #!/bin/sh
+echo "==> Installing VSCode extensions..."
+if ! command -v code &>/dev/null; then
+  echo "   code command not found, skipping"
+  exit 0
+fi
+
 extensions="
 astro-build.astro-vscode
 github.vscode-github-actions
@@ -30,5 +36,6 @@ zobo.php-intellisense
 "
 
 for ext in $extensions; do
+  echo "   Installing $ext..."
   code --install-extension "$ext" --force 2>/dev/null
 done
