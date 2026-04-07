@@ -8,7 +8,7 @@ sudo tee /etc/pam.d/sudo_local > /dev/null << 'EOF'
 auth       optional       /opt/homebrew/lib/pam/pam_reattach.so
 auth       sufficient     pam_tid.so
 EOF
-brew install pam-reattach
+brew install pam-reattach </dev/null
 
 echo "==> Checking GitHub CLI auth..."
 if ! gh auth status --hostname github.com &>/dev/null; then
@@ -17,7 +17,8 @@ fi
 
 echo "==> Checking Rust toolchain..."
 if ! command -v rustc &>/dev/null; then
-  rustup-init -y --no-modify-path
+  rustup toolchain install stable --no-self-update
+  rustup default stable
 else
   echo "   Rust already installed, skipping"
 fi
@@ -37,8 +38,15 @@ for font_dmg in SF-Pro SF-Mono; do
   fi
 done
 
+echo "==> Setting up VS Code CLI..."
+if [ -d "/Applications/Visual Studio Code.app" ] && [ ! -f "/opt/homebrew/bin/code" ]; then
+  ln -sf "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /opt/homebrew/bin/code
+fi
+
 echo "==> Checking Claude Code..."
-if ! command -v claude &>/dev/null; then
+if [ "${SKIP_CLAUDE_INSTALL:-}" = "1" ]; then
+  echo "   Skipping Claude Code install (SKIP_CLAUDE_INSTALL=1)"
+elif ! command -v claude &>/dev/null; then
   curl -fsSL https://claude.ai/install.sh | sh
 else
   echo "   Claude Code already installed, skipping"
