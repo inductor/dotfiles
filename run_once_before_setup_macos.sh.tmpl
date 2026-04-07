@@ -43,6 +43,13 @@ if [ -d "/Applications/Visual Studio Code.app" ] && [ ! -f "/opt/homebrew/bin/co
   ln -sf "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /opt/homebrew/bin/code
 fi
 
+echo "==> Checking kind..."
+if [ "${SKIP_KIND_INSTALL:-}" = "1" ]; then
+  echo "   Skipping kind install (SKIP_KIND_INSTALL=1)"
+elif ! command -v kind &>/dev/null; then
+  brew install kind
+fi
+
 echo "==> Checking Claude Code..."
 if [ "${SKIP_CLAUDE_INSTALL:-}" = "1" ]; then
   echo "   Skipping Claude Code install (SKIP_CLAUDE_INSTALL=1)"
