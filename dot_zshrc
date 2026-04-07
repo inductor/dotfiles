@@ -14,9 +14,9 @@ alias kn=kubens
 alias kx=kubectx
 
 # Language managers
-eval "$(jenv init -)" 2>/dev/null
-eval "$(rbenv init - zsh)" 2>/dev/null
-eval "$(fnm env --use-on-cd --shell zsh)" 2>/dev/null
+command -v jenv &>/dev/null && eval "$(jenv init -)"
+command -v rbenv &>/dev/null && eval "$(rbenv init - zsh)"
+command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
 
 eval "$(starship init zsh)"
 
@@ -27,7 +27,6 @@ alias ll='eza -alh --git'
 alias la='eza -a'
 alias tree='eza --tree'
 alias cat='bat -pp'
-eval "$(zoxide init zsh --cmd cd)"
 
 # ghq + fzf
 alias repo="cd \$(ghq root)/\$(ghq list | fzf)"
@@ -41,3 +40,5 @@ if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then
 fi
 
 [[ -f ~/.zshrc_local ]] && source ~/.zshrc_local
+
+eval "$(zoxide init zsh --cmd cd)"
