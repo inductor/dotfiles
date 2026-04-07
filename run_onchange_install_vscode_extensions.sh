@@ -1,5 +1,6 @@
 #!/bin/sh
 echo "==> Installing VSCode extensions..."
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 if ! command -v code &>/dev/null; then
   echo "   code command not found, skipping"
   exit 0
